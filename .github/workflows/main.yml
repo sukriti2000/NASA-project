@@ -10,9 +10,11 @@ jobs:
   build:
     env:
       CI: true
+      MONGO_URL: mongodb://localhost/nasa
     strategy:
       matrix:
         node-version: [20.11.0]
+        mongo-version: [8.1.1]
     runs-on: windows-latest
     steps:
       - name: Checkout code
@@ -25,6 +27,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
+      - name: MongoDB in GitHub Actions
+        uses: supercharge/mongodb-github-action@1.10.0
+        with:
+          mongodb-version: ${{ matrix.mongo-version }}
       - run: npm run build --prefix client
       - run: npm test
